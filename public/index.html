@@ -1,12 +1,134 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>링크 버튼</title>
+<meta charset="UTF-8">
+<title>나의 소개</title>
+<style>
+    html {
+        font-size: 16px; /* 1rem = 16px */
+    }
+    body {
+        font-family: sans-serif;
+        background: #fff;
+        color: #333;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        flex-direction: column;
+    }
+    .container, .verify {
+        max-width: 25rem; /* 400px */
+        width: 100%;
+        padding: 1.25rem; /* 20px */
+        border: 0.0625rem solid #ddd; /* 1px */
+        border-radius: 0.625rem; /* 10px */
+        text-align: center;
+    }
+    h1 {
+        margin-bottom: 1.25rem; /* 20px */
+        font-size: 1.5rem; /* 24px */
+    }
+    .info p {
+        margin: 0.5rem 0; /* 8px 0 */
+        font-size: 1rem; /* 16px */
+    }
+    .buttons button {
+        width: 100%;
+        margin: 0.375rem 0; /* 6px */
+        padding: 0.625rem; /* 10px */
+        font-size: 1rem; /* 16px */
+        border: 0.0625rem solid #ccc; /* 1px */
+        border-radius: 0.375rem; /* 6px */
+        background: #f5f5f5;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+    .buttons button:hover {
+        background: #e0e0e0;
+    }
+    input[type="text"] {
+        padding: 0.5rem; /* 8px */
+        width: 80%;
+        margin-bottom: 0.625rem; /* 10px */
+        border: 0.0625rem solid #ccc; /* 1px */
+        border-radius: 0.375rem; /* 6px */
+        font-size: 1rem; /* 16px */
+    }
+    #message {
+        color: red;
+        margin-bottom: 0.625rem; /* 10px */
+    }
+</style>
 </head>
 <body>
-    <button onclick="window.open('https://example.com', '_blank')">
-        사이트 열기
-    </button>
+
+<div class="verify" id="verifyDiv">
+    <h1>접속전 잠깐!</h1>
+    <p>우리반(5-3)의 인사(친구들이 바꾼)는 무엇일까요?</p>
+    <input type="text" id="verifyInput" placeholder="답을 입력하세요">
+    <p id="message"></p>
+    <button onclick="checkVerify()">확인</button>
+</div>
+
+<div class="container" id="introDiv" style="display:none;">
+    <h1>나의 소개</h1>
+    <div class="info" id="fullInfo">
+        <p><strong>이름:</strong> 임준호</p>
+        <p><strong>거주지:</strong> 대구광역시 수성구 범어동</p>
+        <p><strong>출생년도:</strong> 2014</p>
+        <p><strong>친구들의 로블록스 ID:</strong>@OHG_0905, @Speedu1, @Azzbord, @EWOCHOI</p>
+        <p><strong>메일 주소:</strong> jim257302@gmail.com</p>
+        <p><strong>전화 번호:</strong> 010-8774-2533</p>
+    </div>
+
+    <div class="buttons">
+        <button onclick="window.open('https://discord.gg/ePWJGkmt', '_blank')">준호의 로블록스 디코 서버 접속하기</button>
+        <button onclick="window.open('https://open.kakao.com/o/s8bJFBQh', '_blank')">카카오톡 친추</button>
+        <button onclick="showLimitedInfo()">실제로 아는 사이가 아닙니다</button>
+    </div>
+</div>
+
+<script>
+let attempts = 0;
+const maxAttempts = 3;
+let locked = false;
+
+function checkVerify() {
+    if(locked) return;
+
+    const input = document.getElementById('verifyInput').value.trim();
+    const message = document.getElementById('message');
+
+    if(input === "충성" || input === "충성!") {
+        document.getElementById('verifyDiv').style.display = "none";
+        document.getElementById('introDiv').style.display = "block";
+    } else {
+        attempts++;
+        if(attempts >= maxAttempts) {
+            message.textContent = "3번 틀렸습니다. 1분 후에 다시 시도하세요.";
+            locked = true;
+            setTimeout(() => {
+                attempts = 0;
+                locked = false;
+                message.textContent = "";
+            }, 60000); // 1분
+        } else {
+            message.textContent = `틀렸습니다. 남은 기회: ${maxAttempts - attempts}`;
+        }
+    }
+}
+
+function showLimitedInfo() {
+    const limitedInfo = `
+        <p><strong>이름:</strong> 임준호</p>
+        <p><strong>출생년도:</strong> 2014</p>
+        <p><strong>친구들의 로블록스 ID:</strong>@OHG_0905, @Speedu1, @Azzbord, @EWOCHOI</p>
+    `;
+    document.getElementById('fullInfo').innerHTML = limitedInfo;
+}
+</script>
+
 </body>
 </html>
